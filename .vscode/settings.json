@@ -1,0 +1,12 @@
+{
+  "java.compile.nullAnalysis.mode": "disabled",
+  "tailwindCSS.includeLanguages": {
+    "css": "html"
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "files.associations": {
+    "*.css": "css"
+  }
+}
