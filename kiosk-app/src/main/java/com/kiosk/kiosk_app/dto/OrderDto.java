@@ -18,6 +18,9 @@ public class OrderDto {
     private LocalDateTime createdAt;
 
     public static OrderDto fromEntity(Order order) {
+        System.out.println("📦 주문 ID: " + order.getId());
+        System.out.println("📦 포함된 아이템 수: " + order.getItems().size());
+
         OrderDto dto = new OrderDto();
         dto.setId(order.getId());
         dto.setItems(order.getItems().stream()
@@ -38,7 +41,13 @@ public class OrderDto {
             ItemDto dto = new ItemDto();
             dto.setName(item.getMenu().getName());
             dto.setQuantity(item.getQuantity());
+
+            // ✅ item 기준으로 로그 찍기
+            System.out.println("📦 아이템 이름: " + dto.getName());
+            System.out.println("📦 수량: " + dto.getQuantity());
+
             return dto;
         }
     }
+
 }

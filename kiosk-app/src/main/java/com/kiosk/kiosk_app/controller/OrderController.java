@@ -8,6 +8,7 @@ import com.kiosk.kiosk_app.dto.*;
 import com.kiosk.kiosk_app.repository.MenuRepository;
 import com.kiosk.kiosk_app.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,9 @@ public class OrderController {
 
         @Autowired
         private MenuRepository menuRepository;
+
+        @Autowired
+        private SimpMessagingTemplate messagingTemplate; // ✅ 웹소켓 메시지 전송 도구
 
         // 주문 생성
         @PostMapping
@@ -69,6 +73,9 @@ public class OrderController {
                                                 orderItem.getQuantity(),
                                                 orderItem.getPrice()))
                                 .collect(Collectors.toList());
+                // ✅ 여기 추가하세요!
+                messagingTemplate.convertAndSend("/topic/orders",
+                                new OrderResponse(order.getId(), totalPrice, order.getStatus(), itemDtos));
 
                 // OrderResponse 반환 시 items를 포함하여 반환
                 return new OrderResponse(order.getId(), totalPrice, order.getStatus(), itemDtos);
