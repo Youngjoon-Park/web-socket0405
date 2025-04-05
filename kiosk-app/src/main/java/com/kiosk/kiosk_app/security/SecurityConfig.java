@@ -24,7 +24,20 @@ public class SecurityConfig {
                                 .csrf().disable()
                                 .cors().and()
                                 .authorizeHttpRequests(registry -> registry
-                                                // ✅ 관리자 API 중 허용할 경로 명시
+
+                                                // ✅ 정적 리소스 + favicon.ico
+                                                .requestMatchers(
+                                                                "/", "/index.html",
+                                                                "/assets/**",
+                                                                "/favicon.ico",
+                                                                "/vite.svg",
+                                                                "/manifest.json",
+                                                                "/logo192.png",
+                                                                "/logo512.png",
+                                                                "/robots.txt")
+                                                .permitAll()
+
+                                                // ✅ 관리자 API 허용 경로
                                                 .requestMatchers("/api/admin/orders").permitAll()
                                                 .requestMatchers("/api/admin/orders/**").permitAll()
                                                 .requestMatchers("/api/admin/payments").permitAll()
@@ -38,13 +51,13 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/admin/login").permitAll()
                                                 .requestMatchers("/api/admin/validate").permitAll()
 
-                                                // ✅ 메뉴 정보 조회 추가: 인증 없이 접근 가능하도록 설정
+                                                // ✅ 메뉴 정보 조회
                                                 .requestMatchers("/api/admin/menus/**").permitAll()
 
-                                                // ✅ 그 외 관리자 API는 인증 필요
+                                                // ✅ 나머지 관리자 API는 인증 필요
                                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
 
-                                                // ✅ 나머지 요청은 모두 허용
+                                                // ✅ 그 외 요청은 모두 허용
                                                 .anyRequest().permitAll())
                                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                                                 UsernamePasswordAuthenticationFilter.class)
